@@ -19,17 +19,12 @@ class UserAuthToken(APIView):
         serializer = CreateUserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            # try:
             send_verification_email(request, user)
-            # except Exception as e:
-            #     return Response(e, status=status.HTTP_400_BAD_REQUEST)
-
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
-
-class UserLogin(ObtainAuthToken):
+class UserLogIn(ObtainAuthToken):
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data,
@@ -70,3 +65,26 @@ class UserVerificationEmail(APIView):
 
         return Response({'errors': ['Invalid user or token']}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class UserDelete(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def delete(self, request):
+        user = request.user
+        request.user.delete()
+        message = {
+            'message': 'User {user} deleted successfully'.format(
+                user=user.username,
+            ),
+        }
+        return Response(message, status=status.HTTP_200_OK)
+
+
+class UserLogOut(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, format=None):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
