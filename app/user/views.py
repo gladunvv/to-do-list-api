@@ -11,11 +11,12 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from user.messages import send_verification_email
 from user.serializers import CreateUserSerializer
 
+
 class UserAuthToken(APIView):
 
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = CreateUserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -25,6 +26,8 @@ class UserAuthToken(APIView):
 
 
 class UserLogIn(ObtainAuthToken):
+
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data,
@@ -70,7 +73,7 @@ class UserDelete(APIView):
 
     permission_classes = (permissions.IsAuthenticated,)
 
-    def delete(self, request):
+    def delete(self, request, *args, **kwargs):
         user = request.user
         request.user.delete()
         message = {
@@ -85,6 +88,6 @@ class UserLogOut(APIView):
 
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request, format=None):
+    def get(self, request, *args, **kwargs):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
