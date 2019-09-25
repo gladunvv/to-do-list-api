@@ -16,3 +16,14 @@ class ToDoListView(APIView):
         to_do_list = get_list_or_404(ToDoList, user=user)
         serializer = ToDoListSerializer(to_do_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class OneToDoListView(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, pk, *args, **kwargs):
+
+        user = request.user
+        to_do = get_object_or_404(ToDoList, user=user, pk=pk)
+        serializer = ToDoListSerializer(to_do)
+        return Response(serializer.data, status=status.HTTP_200_OK)
