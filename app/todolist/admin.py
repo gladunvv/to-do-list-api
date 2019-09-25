@@ -1,9 +1,9 @@
 from django.contrib import admin
-from todolist.models import List, Item, Marker
+from todolist.models import ToDoList, Item, Marker
 
 
-@admin.register(List)
-class AdminList(admin.ModelAdmin):
+@admin.register(ToDoList)
+class AdminToDoList(admin.ModelAdmin):
 
     list_display = ('user', 'name')
 

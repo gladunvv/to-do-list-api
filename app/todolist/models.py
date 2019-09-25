@@ -16,7 +16,7 @@ class Marker(models.Model):
         return self.name
 
 
-class List(models.Model):
+class ToDoList(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='lists', on_delete=models.CASCADE)
     name = models.CharField('List name', max_length=30, unique=True)
     marker = models.ForeignKey(Marker, blank=True, null=True, on_delete=models.SET_NULL)
@@ -41,7 +41,7 @@ class Item(models.Model):
     notification_date = models.DateTimeField(blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, default=2)
     complited = models.BooleanField(default=False)
-    todo_list = models.ForeignKey(List, on_delete=models.CASCADE)
+    todo_list = models.ForeignKey(ToDoList, related_name='items', on_delete=models.CASCADE)
 
     class Meta:
         ordering =('title',)
