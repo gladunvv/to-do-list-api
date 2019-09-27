@@ -6,6 +6,7 @@ from rest_framework import status
 from todolist.models import ToDoList, Item, Marker
 from todolist.serializers import (
     ToDoListSerializer,
+    CreateItemSerializer,
     CreateToDoListSerializer,
 )
 
@@ -44,3 +45,17 @@ class CreateToDoListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateItemView(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, pk, *args, **kwargs):
+        todo_list = get_object_or_404(ToDoList, pk=pk)
+        data = request.data
+        serializer = CreateItemSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(todo_list=todo_list)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serizlizer.errors, status=status.HTTP_400_BAD_REQUEST)
