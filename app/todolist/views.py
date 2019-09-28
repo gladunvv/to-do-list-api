@@ -10,6 +10,7 @@ from todolist.serializers import (
     CreateToDoListSerializer,
 )
 
+
 class ToDoListView(APIView):
 
     permission_classes = (permissions.IsAuthenticated,)
