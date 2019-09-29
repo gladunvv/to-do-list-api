@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from todolist.models import ToDoList, Item, Marker
 from todolist.serializers import (
+    ItemSerializer,
     ToDoListSerializer,
-    CreateItemSerializer,
     CreateToDoListSerializer,
 )
 
@@ -22,6 +22,7 @@ class ToDoListView(APIView):
         serializer = ToDoListSerializer(to_do_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class OneToDoListView(APIView):
 
     permission_classes = (permissions.IsAuthenticated,)
@@ -32,6 +33,7 @@ class OneToDoListView(APIView):
         to_do = get_object_or_404(ToDoList, user=user, pk=pk)
         serializer = ToDoListSerializer(to_do)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class CreateToDoListView(APIView):
 
@@ -47,6 +49,7 @@ class CreateToDoListView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class CreateItemView(APIView):
 
     permission_classes = (permissions.IsAuthenticated,)
@@ -54,9 +57,24 @@ class CreateItemView(APIView):
     def post(self, request, pk, *args, **kwargs):
         todo_list = get_object_or_404(ToDoList, pk=pk)
         data = request.data
-        serializer = CreateItemSerializer(data=data)
+        serializer = ItemSerializer(data=data)
         if serializer.is_valid():
             serializer.save(todo_list=todo_list)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serizlizer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateItemView(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def patch(self, request, td_pk, it_pk, *args, **kwargs):
+        item = get_object_or_404(Item, todo_list=td_pk, pk=it_pk)
+        data=request.data
+        serializer = ItemSerializer(item, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Resposne(serializer.error, staus=status.HTTP_400_BAD_REQUEST)
