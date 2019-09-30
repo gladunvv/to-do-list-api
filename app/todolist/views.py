@@ -8,6 +8,7 @@ from todolist.serializers import (
     ItemSerializer,
     ToDoListSerializer,
     CreateToDoListSerializer,
+    MarkerSerializer,
 )
 
 
@@ -78,3 +79,15 @@ class UpdateItemView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Resposne(serializer.error, staus=status.HTTP_400_BAD_REQUEST)
+
+
+class MarkerView(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = request.user 
+        todo_lists = get_list_or_404(ToDoList, user=user)
+        markers = get_list_or_404(Marker)
+        serializer = MarkerSerializer(markers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

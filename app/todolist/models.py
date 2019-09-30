@@ -19,7 +19,7 @@ class Marker(models.Model):
 class ToDoList(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='lists', on_delete=models.CASCADE)
     name = models.CharField('List name', max_length=30, unique=True)
-    marker = models.ForeignKey(Marker, blank=True, null=True, on_delete=models.SET_NULL)
+    marker = models.ForeignKey(Marker, related_name='todo_lists', blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ('name',)
