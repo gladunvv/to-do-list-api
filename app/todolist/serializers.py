@@ -30,7 +30,7 @@ class ToDoListSerializerForMarkers(serializers.ModelSerializer):
 
     class Meta:
         model = ToDoList
-        fields = ('name', 'items',)
+        fields = ('name', 'items')
 
 class MarkerSerializer(serializers.ModelSerializer):
 
@@ -38,4 +38,10 @@ class MarkerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Marker
-        fields = ('name', 'todo_lists', )
+        fields = ('name', 'todo_lists')
+
+class CreateMarkerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Marker
+        fields = ('name',)

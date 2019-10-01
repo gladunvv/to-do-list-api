@@ -9,6 +9,7 @@ from todolist.serializers import (
     ToDoListSerializer,
     CreateToDoListSerializer,
     MarkerSerializer,
+    CreateMarkerSerializer,
 )
 
 
@@ -91,3 +92,18 @@ class MarkerView(APIView):
         markers = get_list_or_404(Marker)
         serializer = MarkerSerializer(markers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CreateMarker(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request,*args, **kwargs):
+        user = request.user
+        data = request.data
+        serializer = CreateMarkerSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(user=user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

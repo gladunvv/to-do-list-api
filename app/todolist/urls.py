@@ -5,7 +5,8 @@ from todolist.views import (
     ToDoListView,
     OneToDoListView,
     CreateToDoListView,
-    MarkerView
+    MarkerView,
+    CreateMarker,
 )
 
 app_name = 'todolist'
@@ -16,5 +17,6 @@ urlpatterns = [
     path('<int:td_pk>/<int:it_pk>/update/', UpdateItemView.as_view(), name='item_update'),
     path('all/', ToDoListView.as_view(), name='td_all'),
     path('create/', CreateToDoListView.as_view(), name='td_create'),
-    path('marker/all/', MarkerView.as_view(), name='mk_all')
+    path('marker/all/', MarkerView.as_view(), name='mk_all'),
+    path('marker/create/', CreateMarker.as_view(), name='mk_create'),
 ]

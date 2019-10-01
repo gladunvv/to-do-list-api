@@ -5,6 +5,7 @@ from django.conf import settings
 
 
 class Marker(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='markers', on_delete=models.CASCADE)
     name = models.CharField('Marker name', max_length=30, unique=True)
 
     class Meta:
