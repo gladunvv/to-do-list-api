@@ -6,7 +6,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('title', 'priority', 'complited', 'notification_date', 'created_date')
+        fields = ('id', 'title', 'priority', 'complited', 'notification_date', 'created_date')
 
 
 class ToDoListSerializer(serializers.ModelSerializer):
@@ -15,22 +15,22 @@ class ToDoListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ToDoList
-        fields = ('user', 'name', 'marker', 'items')
+        fields = ('id', 'user', 'name', 'marker', 'items')
 
 class CreateToDoListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ToDoList
-        fields = ('name', 'marker')
+        fields = ('id', 'name', 'marker')
 
 
 class ToDoListSerializerForMarkers(serializers.ModelSerializer):
 
-    items = ItemSerializer(many=True)
 
     class Meta:
         model = ToDoList
-        fields = ('name', 'items')
+        fields = ('id', 'name')
+
 
 class MarkerSerializer(serializers.ModelSerializer):
 
@@ -38,7 +38,8 @@ class MarkerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Marker
-        fields = ('name', 'todo_lists')
+        fields = ('id', 'name', 'todo_lists')
+
 
 class CreateMarkerSerializer(serializers.ModelSerializer):
 

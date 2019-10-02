@@ -64,7 +64,7 @@ class CreateItemView(APIView):
             serializer.save(todo_list=todo_list)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serizlizer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UpdateItemView(APIView):
@@ -87,9 +87,9 @@ class MarkerView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        user = request.user 
-        todo_lists = get_list_or_404(ToDoList, user=user)
-        markers = get_list_or_404(Marker)
+        user = request.user
+        # todo_lists = get_list_or_404(ToDoList, user=user)
+        markers = get_list_or_404(Marker, user=user)
         serializer = MarkerSerializer(markers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -98,7 +98,7 @@ class CreateMarker(APIView):
 
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request,*args, **kwargs):
+    def post(self, request, *args, **kwargs):
         user = request.user
         data = request.data
         serializer = CreateMarkerSerializer(data=data)
@@ -107,3 +107,4 @@ class CreateMarker(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
