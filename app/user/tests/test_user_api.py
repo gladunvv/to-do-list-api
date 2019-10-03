@@ -3,11 +3,10 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-
+from django.core import exceptions
 
 CREATE_USER_URL = reverse('user:createuser')
 LOGIN_USER_URL = reverse('user:login')
-VERIFICATION_USER_URL = reverse('user:verification')
 LOGOUT_USER_URL = reverse('user:logout')
 DELETE_USER_URL = reverse('user:delete')
 
@@ -69,3 +68,34 @@ class UserApiTests(TestCase):
         res = self.client.post(CREATE_USER_URL, context)
         self.assertIn('token', res.data)
 
+    def test_logout_user(self):
+        context = {
+            'username': 'newuser',
+            'email': 'test@bounty.com',
+            'password': 'newpass1234',
+        }
+        res_create = self.client.post(CREATE_USER_URL, context)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + res_create.data['token'])
+        self.assertIn('token', res_create.data)
+        get_user_model().objects.get(auth_token=res_create.data['token'])
+        res = self.client.post(LOGOUT_USER_URL)
+        try:
+            get_user_model().objects.get(auth_token=res_create.data['token'])
+        except exceptions.ObjectDoesNotExist:
+            self.assertTrue(True)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_delete_user(self):
+        context = {
+            'username': 'newuser',
+            'email': 'test@bounty.com',
+            'password': 'newpass1234',
+        }
+        res_create = self.client.post(CREATE_USER_URL, context)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + res_create.data['token'])
+        res = self.client.delete(DELETE_USER_URL)
+        try:
+            get_user_model().objects.get(username=res_create.data['username'])
+        except exceptions.ObjectDoesNotExist:
+            self.assertTrue(True)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)

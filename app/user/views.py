@@ -94,8 +94,9 @@ class UserDelete(APIView):
 
 class UserLogOut(APIView):
 
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, )
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, format=None):
         request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
+        msg = ('You have successfully logged out the application')
+        return Response({'message': msg}, status=status.HTTP_200_OK)

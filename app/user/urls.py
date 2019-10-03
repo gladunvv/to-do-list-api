@@ -13,6 +13,6 @@ urlpatterns = [
     path('create/', UserAuthToken.as_view(), name='createuser'),
     path('login/', UserLogIn.as_view(), name='login'),
     path('verification/', UserVerificationEmail.as_view(), name='verification'),
-    path('logout/', UserLogOut, name='logout'),
+    path('logout/', UserLogOut.as_view(), name='logout'),
     path('delete/', UserDelete.as_view(), name='delete'),
 ]
