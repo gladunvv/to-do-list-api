@@ -12,15 +12,14 @@ def send_email(email):
     email.send()
 
 
-def send_verification_email(request, user):
+def send_verification_email(request, user, token):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    token = Token.objects.create(user=user)
     mail_subject = 'Activate your account'
     current_site = str(get_current_site(request))
     activation_uri = 'http://{}{}?uid={}&token={}'.format(current_site,
                                                            reverse('user:verification'),
                                                            uid,
-                                                           token
+                                                           token.key
                                                            )
 
     message = render_to_string('user/email_verification.html', {

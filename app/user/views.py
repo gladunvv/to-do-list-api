@@ -20,8 +20,14 @@ class UserAuthToken(APIView):
         serializer = CreateUserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            send_verification_email(request, user)
-            return Response(serializer.data, status.HTTP_201_CREATED)
+
+            if user:
+                token = Token.objects.create(user=user)
+                json = serializer.data
+                json['token'] = token.key
+
+            send_verification_email(request, user, token)
+            return Response(json, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
@@ -61,7 +67,9 @@ class UserVerificationEmail(APIView):
         token = Token.objects.get(user=user)
         if user and token:
             message = {
-                'message': 'Congratulations you have successfully registered!',
+                'message': 'Congratulations dear {} you have successfully registered!'.format(
+                    user.username
+                ),
                 'token': token.key,
             }
             return Response(message, status=status.HTTP_200_OK)
