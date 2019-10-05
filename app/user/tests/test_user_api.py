@@ -5,6 +5,10 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from django.core import exceptions
 
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
+VEREFICATION_EMAIL_URL = reverse('user:verification')
 CREATE_USER_URL = reverse('user:createuser')
 LOGIN_USER_URL = reverse('user:login')
 LOGOUT_USER_URL = reverse('user:logout')
@@ -99,3 +103,20 @@ class UserApiTests(TestCase):
         except exceptions.ObjectDoesNotExist:
             self.assertTrue(True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+
+    def verification_email(self):
+        context = {
+            'username': 'newuser',
+            'email': 'test@bounty.com',
+            'password': 'newpass1234',
+        }
+        self.client.post(CREATE_USER_URL, context)
+
+        user = get_user_model().objects.get(username=context['username'])
+        token = user.auth_token
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        res = self.client.get(VEREFICATION_EMAIL_URL + 'uid={}&token={}'.format(uid, token.key))
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn('token', res.data)
