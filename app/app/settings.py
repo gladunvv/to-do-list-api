@@ -145,5 +145,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-from .private_settings import *
+# SETTINGS FOR EMAIL
+# from .private_settings import *
