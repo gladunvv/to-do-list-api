@@ -104,8 +104,7 @@ class UserApiTests(TestCase):
             self.assertTrue(True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-
-    def verification_email(self):
+    def test_verification_email(self):
         context = {
             'username': 'newuser',
             'email': 'test@bounty.com',
@@ -116,7 +115,6 @@ class UserApiTests(TestCase):
         user = get_user_model().objects.get(username=context['username'])
         token = user.auth_token
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-
-        res = self.client.get(VEREFICATION_EMAIL_URL + 'uid={}&token={}'.format(uid, token.key))
+        res = self.client.get(VEREFICATION_EMAIL_URL + '?uid={}&token={}'.format(uid, token.key))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertIn('token', res.data)
+        self.assertEqual(token.key, res.data['token'])
