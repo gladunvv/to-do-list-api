@@ -38,7 +38,7 @@ class Item(models.Model):
         (3, 'High'),
     )
     title = models.CharField(max_length=250)
-    created_date = models.DateTimeField(default=datetime.datetime.now)
+    created_date = models.DateTimeField(auto_now_add=True)
     notification_date = models.DateTimeField(blank=True, null=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES, default=2)
     complited = models.BooleanField(default=False)

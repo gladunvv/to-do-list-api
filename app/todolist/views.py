@@ -71,8 +71,8 @@ class UpdateItemView(APIView):
 
     permission_classes = (permissions.IsAuthenticated,)
 
-    def patch(self, request, td_pk, it_pk, *args, **kwargs):
-        item = get_object_or_404(Item, todo_list=td_pk, pk=it_pk)
+    def patch(self, request, tdl_pk, it_pk, *args, **kwargs):
+        item = get_object_or_404(Item, todo_list=tdl_pk, pk=it_pk)
         data=request.data
         serializer = ItemSerializer(item, data=data)
         if serializer.is_valid():
