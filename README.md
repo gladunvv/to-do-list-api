@@ -2,7 +2,10 @@
 Simple to-do list api on DRF
 
 
-![travis-ci](https://travis-ci.org/gladunvv/to-do-list-api.svg?branch=master)
+[![travis-ci](https://travis-ci.org/gladunvv/to-do-list-api.svg?branch=master)](https://travis-ci.org/gladunvv/to-do-list-api)
+[![codecov](https://codecov.io/gh/gladunvv/to-do-list-api/branch/master/graph/badge.svg)](https://codecov.io/gh/gladunvv/to-do-list-api)
+
+
 
 ### Краткое описание:
 Простое API для создания блокнота-задачника, реализован полный CRUD функционал, есть регистрация через токены, 
