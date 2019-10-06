@@ -89,3 +89,22 @@ class ToDoListTests(TestCase):
         res = self.client.patch(ITEM_UPDATE_URL, context_new)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertNotEqual(res.data['title'], context_old['title'])
+
+    def test_create_mk_url(self):
+        context = {
+            'name': 'new_mk'
+        }
+        self.create_tdl()
+        self.token_user()
+        res = self.client.post(MK_CREATE_URL, context)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+    def test_view_mk_all(self):
+        context = {
+            'name': 'new_mk'
+        }
+        self.create_tdl()
+        self.token_user()
+        self.client.post(MK_CREATE_URL, context)
+        res = self.client.get(MK_ALL_URL)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
