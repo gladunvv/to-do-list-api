@@ -34,7 +34,7 @@ class UserApiTests(TestCase):
         res = self.client.post(CREATE_USER_URL, context)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
-    def test_create_user_exists_bed_password(self):
+    def test_create_user_exists_bad_password(self):
         context = {
             'username': 'newuser',
             'email': 'test@bounty.com',
@@ -118,3 +118,51 @@ class UserApiTests(TestCase):
         res = self.client.get(VEREFICATION_EMAIL_URL + '?uid={}&token={}'.format(uid, token.key))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(token.key, res.data['token'])
+
+    def test_verification_email_no_token_and_uid(self):
+        context = {
+            'username': 'newuser',
+            'email': 'test@bounty.com',
+            'password': 'newpass1234',
+        }
+        self.client.post(CREATE_USER_URL, context)
+
+        user = get_user_model().objects.get(username=context['username'])
+        error = 'No uid or token provided'
+        res = self.client.get(VEREFICATION_EMAIL_URL)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(error, res.data['errors'])
+
+    def test_verification_email_invalid_token(self):
+        context = {
+            'username': 'newuser',
+            'email': 'test@bounty.com',
+            'password': 'newpass1234',
+        }
+        self.client.post(CREATE_USER_URL, context)
+        error = 'Invalid user or token'
+        user = get_user_model().objects.get(username=context['username'])
+        token = 'blablablablablabla111214'
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        res = self.client.get(VEREFICATION_EMAIL_URL +
+                              '?uid={}&token={}'.format(uid, token))
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(error, res.data['errors'])
+
+
+
+    def test_verification_email_invalid_uid(self):
+        context = {
+            'username': 'newuser',
+            'email': 'test@bounty.com',
+            'password': 'newpass1234',
+        }
+        self.client.post(CREATE_USER_URL, context)
+        error = 'Invalid user or token'
+        user = get_user_model().objects.get(username=context['username'])
+        token = user.auth_token
+        uid = urlsafe_base64_encode(force_bytes(5))
+        res = self.client.get(VEREFICATION_EMAIL_URL +
+                              '?uid={}&token={}'.format(uid, token.key))
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(error, res.data['errors'])

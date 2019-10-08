@@ -54,9 +54,9 @@ class UserVerificationEmail(APIView):
 
     def get(self, request, *args, **kwargs):
         uid = request.GET.get('uid', None)
-        token = request.GET.get('token', None)
+        token_key = request.GET.get('token', None)
 
-        if not uid or not token:
+        if not uid or not token_key:
             return Response({'errors': ['No uid or token provided']}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
@@ -64,7 +64,11 @@ class UserVerificationEmail(APIView):
             user = User.objects.get(pk=user_id)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
-        token = Token.objects.get(user=user)
+        try:
+            token = Token.objects.get(key=token_key)
+        except (TypeError, ValueError, OverflowError, Token.DoesNotExist):
+            token = None
+
         if user and token:
             message = {
                 'message': 'Congratulations dear {} you have successfully registered!'.format(
