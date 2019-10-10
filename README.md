@@ -24,9 +24,10 @@ Simple to-do list api on DRF
 
 
 ### Сборка и запуск:
+ * Внутри системы:
 ```
 git clone git@github.com:gladunvv/to-do-list-api.git
-cd to-do-list-api
+cd to-do-list-api/
 pip install virtualenv
 python3 -m venv venv
 source venv/bin/activate
@@ -36,6 +37,19 @@ python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
+
+ * С помощью контейнера Docker:      
+ Для начала скачать Docker для вашей операционной системы
+ [Docker](https://docs.docker.com/)
+```
+git clone git@github.com:gladunvv/to-do-list-api.git
+cd to-do-list-api/
+pip install virtualenv
+python3 -m venv venv
+source venv/bin/activate
+docker-compose build
+docker-compose run
+ ```
 
 
 ### License
