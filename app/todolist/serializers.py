@@ -17,6 +17,7 @@ class ToDoListSerializer(serializers.ModelSerializer):
         model = ToDoList
         fields = ('id', 'user', 'name', 'marker', 'items')
 
+
 class CreateToDoListSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -25,7 +26,6 @@ class CreateToDoListSerializer(serializers.ModelSerializer):
 
 
 class ToDoListSerializerForMarkers(serializers.ModelSerializer):
-
 
     class Meta:
         model = ToDoList

@@ -88,7 +88,6 @@ class MarkerView(APIView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        # todo_lists = get_list_or_404(ToDoList, user=user)
         markers = get_list_or_404(Marker, user=user)
         serializer = MarkerSerializer(markers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
