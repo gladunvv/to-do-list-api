@@ -17,7 +17,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(
         queryset=User.objects.all())
         ]
-    )    
+    )
     password = serializers.CharField(min_length=8, write_only=True)
 
     def create(self, validated_data):
@@ -28,7 +28,6 @@ class CreateUserSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
         )
         return user
-
 
     class Meta:
         model = User

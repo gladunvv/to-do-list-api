@@ -3,7 +3,6 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-from django.core import exceptions
 from todolist.models import (
     Marker,
     ToDoList,
@@ -46,8 +45,8 @@ class ToDoListTests(TestCase):
         context = {
             'name': 'new_tdl'
         }
-        user = self.token_user()
-        res = self.client.post(TDL_CREATE_URL, context)
+        self.token_user()
+        self.client.post(TDL_CREATE_URL, context)
         tdl = ToDoList.objects.get(pk=1)
         return tdl
 

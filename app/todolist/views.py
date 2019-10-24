@@ -18,7 +18,7 @@ class ToDoListView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        
+
         user = request.user
         to_do_list = get_list_or_404(ToDoList, user=user)
         serializer = ToDoListSerializer(to_do_list, many=True)
@@ -73,7 +73,7 @@ class UpdateItemView(APIView):
 
     def patch(self, request, tdl_pk, it_pk, *args, **kwargs):
         item = get_object_or_404(Item, todo_list=tdl_pk, pk=it_pk)
-        data=request.data
+        data = request.data
         serializer = ItemSerializer(item, data=data)
         if serializer.is_valid():
             serializer.save()
@@ -106,4 +106,3 @@ class CreateMarker(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
