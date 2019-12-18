@@ -39,7 +39,7 @@ python manage.py runserver
 ```
 
  * С помощью контейнера Docker:      
- Для начала скачать Docker для вашей операционной системы
+ Для начала необходимо скачать Docker для вашей операционной системы
  [Docker](https://docs.docker.com/)
 ```
 git clone git@github.com:gladunvv/to-do-list-api.git
